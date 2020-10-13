@@ -216,3 +216,5 @@ const member = [
         "gender": "여"
     }
   ]
+
+  exports.member = member;

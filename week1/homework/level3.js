@@ -1,52 +1,81 @@
 // Level 3: 가짜 서버파트 members.js 데이터를 이용해서 랜덤으로 조를 짜는 알고리즘 만들어보기.
 
-const members = require('./member')
+const member = require('./member')
+const serverMembers = member.member
 
-// 소숫점까지 포함
-function getRandomNum(min, max) { 
-    return Math.random() * (max - min) + min; } 
+// 서버 오비, 와이비 데이터 가져오기
+const serverOB = serverMembers.filter(mem => mem.status === "OB");
+const serverYB = serverMembers.filter(mem => mem.status === "YB");
 
-// 정수만
-function getRandomInt(min, max) { 
-    return Math.floor(Math.random() * (max - min + 1)) + min; }
-
-console.log(getRandomNum(1, 30), getRandomInt(1, 30))
-
-
-// Array의 prototype을 지정해주고, shuffle이라는 이름을 가진 함수를 생성
-Array.prototype.shuffle = function() {
-    var length = this.length;
-    
-    // 아래에서 length 후위 감소 연산자를 사용하면서 결국 0이된다.
-    // 프로그래밍에서 0은 false를 의미하기에 0이되면 종료.
+// 오비, 와이비 리스트에서 랜덤한 인덱스 추출 후 한 번 섞는 함수
+const shuffle = (arr) => {
+    var length = arr.length;
     while (length) {
- 
-        // 랜덤한 배열 index 추출
         var index = Math.floor((length--) * Math.random());
- 
-        // 배열의 끝에서부터 0번째 아이템을 순차적으로 대입
-        var temp = this[length];
- 
-        // 랜덤한 위치의 값을 맨뒤(this[length])부터 셋팅
-        this[length] = this[index];
- 
-        // 랜덤한 위치에 위에 설정한 temp값 셋팅
-        this[index] = temp;
+        var temp = arr[length];
+        arr[length] = arr[index];
+        arr[index] = temp;
     }
- 
-    // 배열을 리턴해준다.
-    return this;
-};
-console.log(members[0])
+    return arr;
+}
 
-// console.log("섞기전: " + members);
-// members.shuffle();
-// console.log("1번 섞은후: " + members);
-// members.shuffle();
-// console.log("2번 섞은후: " + members);
-// members.shuffle();
-// console.log("3번 섞은후: " + members);
+var team1 = [];
+var team2 = [];
+var team3 = [];
+var team4 = [];
+var team5 = [];
+var team6 = [];
 
+// OB와 YB의 비율을 1:1로 맞춰서 6개의 팀에 넣어주기
+const shuffle2 = () => {
+    let obShuffled = shuffle(serverOB);
+    let ybShuffled = shuffle(serverYB);
+    for (let i = 0; i < obShuffled.length; i++) {
+        if (i <= 2) {
+            team1.push(obShuffled[i])
+        }
+        else if (3 <= i && i < 6) {
+            team2.push(obShuffled[i])
+        }
+        else if (6 <= i && i < 8) {
+            team3.push(obShuffled[i])
+        }
+        else if (8 <= i && i < 11) {
+            team4.push(obShuffled[i])
+        }
+        else if (11 <= i && i < 13) {
+            team5.push(obShuffled[i])
+        }
+        else {
+            team6.push(obShuffled[i])
+        }
+    }
+    for (let j = 0; j < ybShuffled.length; j++) {
+        if (j <= 2) {
+            team1.push(ybShuffled[j])
+        }
+        else if (3 <= j && j < 6) {
+            team2.push(ybShuffled[j])
+        }
+        else if (6 <= j && j < 10) {
+            team3.push(ybShuffled[j])
+        }
+        else if (10 <= j && j < 13) {
+            team4.push(ybShuffled[j])
+        }
+        else if (13 <= j && j < 17) {
+            team5.push(ybShuffled[j])
+        }
+        else {
+            team6.push(ybShuffled[j])
+        }
+    }
+    console.log("1조입니다: ", team1)
+    console.log("2조입니다: ", team2)
+    console.log("3조입니다: ", team3)    
+    console.log("4조입니다: ", team4)
+    console.log("5조입니다: ", team5)
+    console.log("6조입니다: ", team6)
+}
 
-
-
+shuffle2()
