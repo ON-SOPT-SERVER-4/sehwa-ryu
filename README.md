@@ -16,7 +16,7 @@
 
 #### Docs
 
-- [[W1\] JSON기초.md](https://github.com/ON-SOPT-SERVER-4/sehwa-ryu/blob/main/Readme/[W1] JSON 기초.md)
+- [[W1\]JSON 기초.md](https://github.com/ON-SOPT-SERVER-4/sehwa-ryu/blob/main/Readme/[W1]JSON 기초.md)
 
 - [[W2\]file-system-module.md](https://github.com/ON-SOPT-SERVER-4/sehwa-ryu/blob/main/Readme/[W2]file-system-module.md)
 
