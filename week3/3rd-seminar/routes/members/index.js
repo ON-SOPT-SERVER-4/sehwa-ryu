@@ -11,9 +11,10 @@ router.post('/', (req, res) => {
     const { name, part, age } = req.body;
 
     if (!name || !part || !age) {
-        console.log('필요한 값이 없습니다'); 
+        console.log('필요한 값이 없습니다');
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
     }
+
 
     const idx = membersDB[membersDB.length - 1].idx + 1;
     membersDB.push({
@@ -35,8 +36,7 @@ router.get('/', (req, res) => {
 /** idx 값으로 특정 멤버 조회 */
 router.get('/:idx', (req, res) => {
     const { idx } = req.params;
-
-    if ( !idx ) {
+    if (!idx) {
         console.log('필요한 값이 없습니다!');
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
     }
@@ -53,7 +53,7 @@ router.get('/:idx', (req, res) => {
 /** idx값으로 특정 멤버 삭제 */
 router.delete('/:idx', (req, res) => {
     const { idx } = req.params;
-    if ( !idx ) {
+    if (!idx) {
         console.log('필요한 값이 없습니다!');
         return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
     }
@@ -68,6 +68,31 @@ router.delete('/:idx', (req, res) => {
 
 /** idx값으로 특정 멤버 정보 수정 */
 router.put('/:idx', (req, res) => {
+    const { idx } = req.params;
+    if (!idx) {
+        console.log('필요한 값이 없습니다!');
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+    }
+    if (!name || !part || !age) {
+        console.log('필요한 값이 없습니다!');
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+    }
+
+    const memberIdx = membersDB.findIndex(member => member.idx == idx);
+
+    if (memberIdx === -1) {
+        console.log('idx가 유효하지 않습니다.');
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
+    }
+
+    membersDB[memberIdx] = {
+        idx: Number.parseInt(idx),
+        name,
+        part,
+        age,
+    }
+
+    return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.MEMBER_UPDATE_SUCCESS, membersDB));
 
 });
 
