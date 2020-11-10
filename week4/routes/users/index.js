@@ -93,9 +93,43 @@ router.get('/', async (req, res) => {
         return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.USER_READ_ALL_FAIL));
     }
 })
-router.get('/:id', async (req, res) => {
-    //1. parameter로 id값을 받아온다! (id값은 인덱스값)
-    //2. id값이 유효한지 체크! 존재하지 않는 아이디면 NO_USER 반환
-    //3. status:200 message: READ_USER_SUCCESS, id, email, userName 반환
-})
+
+
+// 특정 아이디로 유저 조회
+router.get("/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findOne({
+            where: {
+                id,
+            },
+            attributes: ["id", "email", "userName"],
+        });
+        if (!user) {
+            console.log("존재하지 않는 아이디입니다.");
+            return res
+                .status(statusCode.BAD_REQUEST)
+                .send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
+        }
+
+        return res
+            .status(statusCode.OK)
+            .send(
+                util.success(statusCode.OK, responseMessage.READ_USER_SUCCESS, user),
+            );
+    } catch (error) {
+        console.log(error);
+        return res
+            .status(statusCode.INTERNAL_SERVER_ERROR)
+            .send(
+                util.fail(
+                    statusCode.INTERNAL_SERVER_ERROR,
+                    responseMessage.READ_USER_FAIL,
+                ),
+            );
+    }
+});
+
+
 module.exports = router;
