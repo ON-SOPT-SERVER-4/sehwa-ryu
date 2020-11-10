@@ -132,4 +132,77 @@ router.get("/:id", async (req, res) => {
 });
 
 
+// Level3 과제
+
+// 특정 유저 정보 수정
+router.put("/:id", async (req, res) => {
+    // 아이디, 바디 가져오기
+    const { id } = req.params;
+    const { email, password, userName } = req.body
+
+    try {
+        const salt = crypto.randomBytes(64).toString("base64");
+        const hashedPassword = crypto.pbkdf2Sync(password, salt, 10000, 64, "sha512").toString("base64");
+
+        // 해당 아이디에 일치하는 데이터들에 한해 정보 업데이트
+        const updateUser = await User.update(
+            {
+                email,
+                password: hashedPassword,
+                userName,
+                salt,
+            },
+            {
+                where: {
+                    id,
+                },
+            });
+
+        if (!updateUser) {
+            console.log("존재하지 않는 아이디입니다!");
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
+        }
+
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.MEMBER_UPDATE_SUCCESS, updateUser));
+    } catch (error) {
+
+        console.log(error);
+        res.status(statusCode.INTERNAL_SERVER_ERROR).send(
+            util.fail(
+                statusCode.INTERNAL_SERVER_ERROR,
+                responseMessage.UPDATE_USER_FAIL,
+            ),
+        );
+    }
+});
+
+router.delete("/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const user = await User.findOne({
+            where: {
+                id,
+            },
+        });
+        if (!user) {
+            console.log("아이디가 존재하지 않습니다!");
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
+        }
+
+        const deletedUser = await User.destroy(
+            {
+                where: {
+                    id,
+                },
+                attributes : ["id", "email", "userName"],
+            }
+        );
+        return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.MEMBER_DELETE_SUCCESS, deletedUser));
+    } catch (error) {
+        console.log(error);
+        return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.MEMBER_DELETE_FAIL));
+
+    }
+})
+
 module.exports = router;
