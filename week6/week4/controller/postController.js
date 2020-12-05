@@ -20,16 +20,19 @@ module.exports = {
             return res.status(sc.INTERNAL_SERVER_ERROR).send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.CREATE_POST_FAIL));
         }
     },
+    // 게시글 조회
     readAllPosts: async (req, res) => {
         try {
             const posts = await Post.findAll({
                 group: 'id',
                 attributes: ['title', 'contents', [sequelize.fn("COUNT", "Liker.Like.PostId"), 'likeCnt']],
                 include: [{
+                    // 불러와야 할 모델에서의 값들
                     model: User,
                     attributes: ['id', 'userName', 'email'],
                 }, {
                     model: User,
+                    // 겹치는 이름 방지를 위해 as 로 리네이밍 해줌
                     as: 'Liker',
                     attributes: ['userName'],
                 }]
@@ -45,6 +48,8 @@ module.exports = {
                 .send(ut.fail(sc.INTERNAL_SERVER_ERROR, rm.READ_POST_ALL_FAIL));
         }
     },
+
+    // Error: Duplicate entry '1-0' for key 'Like.PRIMARY' -> 왜지..? 물어보기
     createLike : async (req, res) => {
         const PostId = parseInt(req.params.postId);
         const UserId = parseInt(req.body.userId);
