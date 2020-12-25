@@ -44,6 +44,13 @@ module.exports = {
   DELETE_LIKE_FAIL: "게시글 좋아요 취소하기 실패",
   ALREADY_LIKED: '이미 좋아요가 되어 있음',
 
+  /* 토큰 */
+  EMPTY_TOKEN: '토큰 값이 없습니다.',
+  EXPIRED_TOKEN: '토큰 값이 만료되었습니다.',
+  INVALID_TOKEN: '유효하지 않은 토큰값입니다.',
+  AUTH_SUCCESS: '인증에 성공했습니다.',
+  ISSUE_SUCCESS: '새로운 토큰이 생성되었습니다.',
+  
   /* 서버에러 */
   INTERNAL_SERVER_ERROR: "서버 내부 오류",
 }
