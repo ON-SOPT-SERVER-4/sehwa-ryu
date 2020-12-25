@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
     if (user.id === undefined) {
         return res.status(sc.UNAUTHORIZED).send(ut.fail(sc.UNAUTHORIZED, rm.INVALID_TOKEN));
     }
-    return res.status(sc.OK).send(ut.fail(sc.OK, rm.AUTH_SUCCESS));
+    return res.status(sc.OK).send(ut.success(sc.OK, rm.AUTH_SUCCESS));
 });
 
 module.exports = router;

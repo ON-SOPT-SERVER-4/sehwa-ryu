@@ -2,8 +2,10 @@ const util = require('../modules/util');
 const responseMessage = require('../modules/responseMessage');
 const statusCode = require('../modules/statusCode');
 const { userService } = require('../service');
-const { User } = require('../models');
+const { User, Post } = require('../models');
 const jwt = require('../modules/jwt');
+const crypto = require('crypto');
+
 
 module.exports = {
     signup: async (req, res) => {
@@ -66,6 +68,7 @@ module.exports = {
                 console.log('비밀번호가 일치하지 않습니다.');
                 return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.MISS_MATCH_PW));
             }
+            // JWT 발급
             const { accessToken, refreshToken } = await jwt.sign(user);
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {
                 accessToken,
@@ -194,7 +197,26 @@ module.exports = {
             return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.MEMBER_DELETE_FAIL));
 
         }
-    }
+    }, 
+
+    getProfile: async (req, res) => {
+        const id = req.decoded;
+        console.log(req.decoded);
+        try {
+          const user = await User.findOne({ 
+              where : {id , },
+              attributes: ['userName', 'email'],
+            //   include: {
+            //     model: Post,
+            //     attributes: ['id', 'title', 'contents', 'postImageUrl', 'UserId']
+            // }
+            });
+          return res.status(statusCode.OK).send(util.success(statusCode.OK, "프로필 조회 성공", user));
+        } catch(err) {
+          console.log(err);
+          return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.USER_READ_ALL_FAIL));    
+        }
+      }
 
 
 }

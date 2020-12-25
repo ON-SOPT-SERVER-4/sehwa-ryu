@@ -4,6 +4,8 @@ var router = express.Router();
 router.use('/users', require('./users'));
 router.use('/posts', require('./posts'));
 router.use('/multer', require('./multer'));
+router.use('/auth', require('./auth'));
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

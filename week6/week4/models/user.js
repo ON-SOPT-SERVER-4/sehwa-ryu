@@ -18,9 +18,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(200),
             allowNull: false,
         },
+        refreshToken: {
+            type: DataTypes.STRING(300),
+            allowNull: true
+        }
     }, {
         //모델의 옵션들을 지정하는곳
         freezeTableName: true,
-        timestamps: false,
+        timestamps: false
     });
 };
