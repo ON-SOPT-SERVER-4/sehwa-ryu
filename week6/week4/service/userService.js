@@ -33,12 +33,37 @@ module.exports = {
     try {
       const inputPassword = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('base64');
       const user = await User.findOne({
-        where : {
+        where: {
           email,
           password: inputPassword
         }
       });
       return user;
+    } catch (err) {
+      throw err;
+    }
+  },
+  getUserID: async (id) => {
+    try {
+      const user = await User.findOne({
+        where: {
+          id: id
+        },
+        attributes: {
+          exclude: ['password', 'salt']
+        },
+      });
+      return user;
+    } catch (err) {
+      throw err;
+    }
+  },
+  updateRefreshToken: async (id, refreshToken) => {
+    try {
+      const user = await User.update(
+        { refreshToken },
+        { where: { id } }
+      );
     } catch (err) {
       throw err;
     }
